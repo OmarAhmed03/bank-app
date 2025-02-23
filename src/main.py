@@ -2,6 +2,7 @@ import streamlit as st
 import os
 from datetime import datetime
 import uuid
+import time
 from langchain.chains import LLMChain
 from langchain_core.prompts import (
     ChatPromptTemplate,
@@ -157,11 +158,28 @@ class BankingAssistant:
         user_input = st.chat_input("Ask me anything about banking...")
         
         if user_input:
+            # Add user message to chat history
             self.add_message(user_input, is_user=True)
+            with st.chat_message("user"):
+                st.markdown(user_input)
+
             try:
-                response = st.session_state.chatbot.predict(human_input=user_input)
-                self.add_message(response, is_user=False)
-                st.rerun()
+                with st.chat_message("assistant"):
+                    # Initialize an empty string to store the full response
+                    full_response = ""
+                    # Create a placeholder for the streaming response
+                    message_placeholder = st.empty()
+                    
+                    # Stream the response
+                    for chunk in st.session_state.chatbot.stream({"human_input": user_input}):
+                        if "text" in chunk:
+                            full_response += chunk["text"]
+                            # Update the placeholder with the accumulated response
+                            message_placeholder.markdown(full_response)
+                    
+                    # Add the complete response to chat history
+                    self.add_message(full_response, is_user=False)
+
             except Exception as e:
                 st.error(f"Error getting response: {str(e)}")
 
