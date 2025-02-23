@@ -74,13 +74,36 @@ class BankingAssistant:
             model_name='llama3-8b-8192'
         )
         
-        system_prompt = """You are a helpful banking assistant. You can:
-        1. Answer questions about banking services
-        2. Explain financial concepts
-        3. Help with banking queries
-        4. Provide general banking information
-        
-        Keep responses clear and helpful. Don't share sensitive information."""
+        system_prompt = """You are Zaina's Banking Assistant, a specialized AI chatbot designed to assist users with specific banking features. You can only help with and discuss the following services:
+
+        1. Financial Transactions:
+        - Deposits and withdrawals
+        - Bank account creation and management
+        - Transaction status checking
+
+        2. User Management:
+        - Agent creation and management
+
+        3. Complaint Management:
+        - Creating complaints
+        - Tracking complaint status
+        - Deleting complaints
+
+        Important Guidelines:
+        - Only provide information about the features listed above
+        - If asked about anything outside these services, politely explain that you can only assist with the listed features
+        - Always maintain a helpful and professional tone
+        - Suggest appropriate services based on user queries
+        - Guide users through the available options
+        - Never share sensitive account information
+        - Always clarify if you need more information to assist properly
+
+        Example responses:
+        - For account queries: "I can help you create a new bank account or manage your existing one. Would you like to proceed with either of these?"
+        - For transactions: "I can assist you with deposits, withdrawals, or checking transaction status. Which service do you need?"
+        - For complaints: "I can help you create a new complaint, track an existing one, or delete a complaint. What would you like to do?"
+
+        Remember: You are specifically designed to handle these banking services and should not provide information about other banking features or services."""
         
         memory = ConversationBufferWindowMemory(
             k=5,
@@ -149,6 +172,7 @@ class BankingAssistant:
     def handle_account_creation(self):
         if 'account_step' not in st.session_state:
             st.session_state.account_step = 'name'
+            st.session_state.account_data = {}
 
         if st.session_state.account_step == 'name':
             name = st.text_input("Full Name")
@@ -161,14 +185,73 @@ class BankingAssistant:
 
         elif st.session_state.account_step == 'email':
             email = st.text_input("Email Address")
-            if st.button("Complete Account Creation"):
+            if st.button("Continue"):
                 if email and '@' in email:
                     st.session_state.account_data['email'] = email
+                    st.session_state.account_step = 'bank_details'
+                    self.add_message("Please enter your banking details:", is_user=False)
+                    st.rerun()
+
+        elif st.session_state.account_step == 'bank_details':
+            col1, col2 = st.columns(2)
+            with col1:
+                bank_id = st.text_input("Bank ID")
+                daily_limit = st.number_input("Daily Transaction Limit", min_value=0.0, step=1000.0)
+                ifsc_code = st.text_input("IFSC Code")
+
+            with col2:
+                upi_id = st.text_input("UPI ID")
+                login_id = st.text_input("Login ID")
+                agent_id = st.text_input("Agent ID")
+
+            if st.button("Continue"):
+                if bank_id and daily_limit > 0 and ifsc_code:
+                    st.session_state.account_data.update({
+                        'bank_id': bank_id,
+                        'daily_limit': daily_limit,
+                        'ifsc_code': ifsc_code,
+                        'upi_id': upi_id,
+                        'login_id': login_id,
+                        'agent_id': agent_id
+                    })
+                    st.session_state.account_step = 'security'
+                    self.add_message("Please set up your security credentials:", is_user=False)
+                    st.rerun()
+
+        elif st.session_state.account_step == 'security':
+            col1, col2 = st.columns(2)
+            with col1:
+                username = st.text_input("Username")
+                password = st.text_input("Password", type="password")
+
+            with col2:
+                trxn_password = st.text_input("Transaction Password", type="password")
+                otp_access = st.checkbox("Enable OTP Access")
+
+            if st.button("Complete Account Creation"):
+                if username and password and trxn_password:
                     account_number = str(uuid.uuid4())[:8]
+                    qrcode_url = f"https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={account_number}"
+                    
+                    st.session_state.account_data.update({
+                        'account_number': account_number,
+                        'username': username,
+                        'password': password,
+                        'trxn_password': trxn_password,
+                        'otp_access': otp_access,
+                        'qrcode_url': qrcode_url
+                    })
+
                     success_message = f"""Account created successfully! 🎉
                     Account Number: {account_number}
                     Name: {st.session_state.account_data['name']}
-                    Email: {email}"""
+                    Email: {st.session_state.account_data['email']}
+                    Bank ID: {st.session_state.account_data['bank_id']}
+                    Daily Limit: ${st.session_state.account_data['daily_limit']:,.2f}
+                    IFSC Code: {st.session_state.account_data['ifsc_code']}
+                    UPI ID: {st.session_state.account_data['upi_id']}
+                    Username: {username}"""
+
                     self.add_message(success_message, is_user=False)
                     st.session_state.account_step = None
                     st.session_state.account_data = {}
