@@ -133,26 +133,160 @@ class BankingAssistant:
         })
 
     def show_feature_selection(self):
-        st.write("Please select what you'd like to do:")
-        col1, col2, col3 = st.columns(3)
+        # Show introduction text
+        st.write("""
+        # Welcome to GamingPe Banking Assistant! 🎉
+        
+        I'm your dedicated AI banking assistant, here to help you with all your banking needs.
+        
+        ### What I can do for you:
+        
+        🏦 **Banking Services**
+        - Create new bank accounts
+        - Handle deposits and withdrawals
+        - Manage transactions
+        
+        💬 **Interactive Chat Support**
+        - Answer your banking questions
+        - Guide you through services
+        - Help with complaints
+        - Provide account assistance
+        
+        Choose an option below to get started:
+        """)
+        
+        # Create two main buttons with custom styling
+        col1, col2 = st.columns(2)
         
         with col1:
-            if st.button("💬 Chat with Assistant", help="Ask questions about banking"):
-                st.session_state.mode = BankingMode.CHAT
-                self.add_message("How can I help you with your banking questions?", is_user=False)
+            if st.button("🏦 Banking Services", use_container_width=True, help="Access account creation and transaction services"):
+                st.session_state.show_services = True
                 st.rerun()
                 
         with col2:
-            if st.button("🏦 Create Account", help="Create a new bank account"):
-                st.session_state.mode = BankingMode.ACCOUNT
-                self.add_message("Let's create your account! What's your full name?", is_user=False)
+            if st.button("💬 Chat with Assistant", use_container_width=True, help="Start a conversation with the banking assistant"):
+                st.session_state.mode = BankingMode.CHAT
+                self.add_message("How can I help you with your banking questions?", is_user=False)
                 st.rerun()
-                
-        with col3:
-            if st.button("💳 Make Transaction", help="Make a deposit or withdrawal"):
-                st.session_state.mode = BankingMode.TRANSACTION
-                self.add_message("Would you like to make a deposit or withdrawal?", is_user=False)
-                st.rerun()
+        
+        # Show services selection if the services button was clicked
+        if hasattr(st.session_state, 'show_services') and st.session_state.show_services:
+            st.write("### Select a Banking Service:")
+            service_col1, service_col2 = st.columns(2)
+            
+            with service_col1:
+                if st.button("📝 Create Account", use_container_width=True, help="Create a new bank account"):
+                    st.session_state.mode = BankingMode.ACCOUNT
+                    self.add_message("Let's create your account! What's your full name?", is_user=False)
+                    st.session_state.show_services = False
+                    st.rerun()
+                    
+            with service_col2:
+                if st.button("💳 Make Transaction", use_container_width=True, help="Make a deposit or withdrawal"):
+                    st.session_state.mode = BankingMode.TRANSACTION
+                    self.add_message("Would you like to make a deposit or withdrawal?", is_user=False)
+                    st.session_state.show_services = False
+                    st.rerun()
+                    st.session_state.mode = BankingMode.TRANSACTION
+                    self.add_message("Would you like to make a deposit or withdrawal?", is_user=False)
+                    st.session_state.show_services = False
+                    st.rerun()
+                    st.session_state.mode = BankingMode.TRANSACTION
+                    self.add_message("Would you like to make a deposit or withdrawal?", is_user=False)
+                    st.session_state.show_services = False
+                    st.rerun()
+                    st.session_state.mode = BankingMode.TRANSACTION
+                    self.add_message("Would you like to make a deposit or withdrawal?", is_user=False)
+                    st.session_state.show_services = False
+                    st.rerun()
+                    st.session_state.mode = BankingMode.TRANSACTION
+                    self.add_message("Would you like to make a deposit or withdrawal?", is_user=False)
+                    st.session_state.show_services = False
+                    st.rerun()
+                    st.session_state.mode = BankingMode.TRANSACTION
+                    self.add_message("Would you like to make a deposit or withdrawal?", is_user=False)
+                    st.session_state.show_services = False
+                    st.rerun()
+                    st.session_state.mode = BankingMode.TRANSACTION
+                    self.add_message("Would you like to make a deposit or withdrawal?", is_user=False)
+                    st.session_state.show_services = False
+                    st.rerun()
+                    st.session_state.mode = BankingMode.TRANSACTION
+                    self.add_message("Would you like to make a deposit or withdrawal?", is_user=False)
+                    st.session_state.show_services = False
+                    st.rerun()
+                    st.session_state.mode = BankingMode.TRANSACTION
+                    self.add_message("Would you like to make a deposit or withdrawal?", is_user=False)
+                    st.session_state.show_services = False
+                    st.rerun()
+                    st.session_state.mode = BankingMode.TRANSACTION
+                    self.add_message("Would you like to make a deposit or withdrawal?", is_user=False)
+                    st.session_state.show_services = False
+                    st.rerun()
+                    st.session_state.mode = BankingMode.TRANSACTION
+                    self.add_message("Would you like to make a deposit or withdrawal?", is_user=False)
+                    st.session_state.show_services = False
+                    st.rerun()
+                    st.session_state.mode = BankingMode.TRANSACTION
+                    self.add_message("Would you like to make a deposit or withdrawal?", is_user=False)
+                    st.session_state.show_services = False
+                    st.rerun()
+                    st.session_state.mode = BankingMode.TRANSACTION
+                    self.add_message("Would you like to make a deposit or withdrawal?", is_user=False)
+                    st.session_state.show_services = False
+                    st.rerun()
+                    st.session_state.mode = BankingMode.TRANSACTION
+                    self.add_message("Would you like to make a deposit or withdrawal?", is_user=False)
+                    st.session_state.show_services = False
+                    st.rerun()
+                    st.session_state.mode = BankingMode.TRANSACTION
+                    self.add_message("Would you like to make a deposit or withdrawal?", is_user=False)
+                    st.session_state.show_services = False
+                    st.rerun()
+                    st.session_state.mode = BankingMode.TRANSACTION
+                    self.add_message("Would you like to make a deposit or withdrawal?", is_user=False)
+                    st.session_state.show_services = False
+                    st.rerun()
+                    st.session_state.mode = BankingMode.TRANSACTION
+                    self.add_message("Would you like to make a deposit or withdrawal?", is_user=False)
+                    st.session_state.show_services = False
+                    st.rerun()
+                    st.session_state.mode = BankingMode.TRANSACTION
+                    self.add_message("Would you like to make a deposit or withdrawal?", is_user=False)
+                    st.session_state.show_services = False
+                    st.rerun()
+                    st.session_state.mode = BankingMode.TRANSACTION
+                    self.add_message("Would you like to make a deposit or withdrawal?", is_user=False)
+                    st.session_state.show_services = False
+                    st.rerun()
+                    st.session_state.mode = BankingMode.TRANSACTION
+                    self.add_message("Would you like to make a deposit or withdrawal?", is_user=False)
+                    st.session_state.show_services = False
+                    st.rerun()
+                    st.session_state.mode = BankingMode.TRANSACTION
+                    self.add_message("Would you like to make a deposit or withdrawal?", is_user=False)
+                    st.session_state.show_services = False
+                    st.rerun()
+                    st.session_state.mode = BankingMode.TRANSACTION
+                    self.add_message("Would you like to make a deposit or withdrawal?", is_user=False)
+                    st.session_state.show_services = False
+                    st.rerun()
+                    st.session_state.mode = BankingMode.TRANSACTION
+                    self.add_message("Would you like to make a deposit or withdrawal?", is_user=False)
+                    st.session_state.show_services = False
+                    st.rerun()
+                    st.session_state.mode = BankingMode.TRANSACTION
+                    self.add_message("Would you like to make a deposit or withdrawal?", is_user=False)
+                    st.session_state.show_services = False
+                    st.rerun()
+                    st.session_state.mode = BankingMode.TRANSACTION
+                    self.add_message("Would you like to make a deposit or withdrawal?", is_user=False)
+                    st.session_state.show_services = False
+                    st.rerun()
+                    st.session_state.mode = BankingMode.TRANSACTION
+                    self.add_message("Would you like to make a deposit or withdrawal?", is_user=False)
+                    st.session_state.show_services = False
+                    st.rerun()
 
     def handle_chat(self):
         user_input = st.chat_input("Ask me anything about banking...")
@@ -185,6 +319,7 @@ class BankingAssistant:
 
         if st.button("⬅️ Back to Main Menu"):
             st.session_state.mode = None
+            st.session_state.messages = []
             st.rerun()
 
     def handle_account_creation(self):
@@ -280,6 +415,7 @@ class BankingAssistant:
             st.session_state.mode = None
             st.session_state.account_step = None
             st.session_state.account_data = {}
+            st.session_state.messages = []
             st.rerun()
 
     def handle_transaction(self):
@@ -312,15 +448,25 @@ class BankingAssistant:
         if st.button("⬅️ Back to Main Menu"):
             st.session_state.mode = None
             st.session_state.transaction_step = None
+            st.session_state.messages = []
             st.rerun()
 
 def main():
-    st.set_page_config(page_title="Banking Assistant", layout="wide")
+    st.set_page_config(
+        page_title="Banking Assistant",
+        layout="wide",
+        initial_sidebar_state="collapsed"
+    )
     local_css()
 
-    st.title("💬 Banking Assistant")
+    st.title("💬 GamingPe Banking Assistant")
 
+    # Initialize the assistant
     assistant = BankingAssistant()
+    
+    # Initialize show_services state if not exists
+    if 'show_services' not in st.session_state:
+        st.session_state.show_services = False
 
     # Display chat history
     for message in st.session_state.messages:
